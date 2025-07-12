@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+
+    <item
+        android:id="@+id/linguinShoppingPanel"
+        android:icon="@drawable/cartforshopping"
+        android:title="Shopping"/>
+
+    <item
+        android:id="@+id/linguinSettingsPanel"
+        android:icon="@drawable/settingforlinguin"
+        android:title="Settings"/>
+
+    <item
+        android:id="@+id/linguinChat"
+        android:icon="@drawable/chatforlinguin"
+        android:title="ChatBox"/>
+
+
+
+</menu>

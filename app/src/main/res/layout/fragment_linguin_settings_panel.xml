@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="640dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F5F5F5"
+    tools:context=".Linguin.LinguinSettingsPanel">
+
+    <ImageView
+        android:id="@+id/blackrectangle"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@drawable/blackrectangle"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/settingsforlinguin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/settingsbg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/music"
+        android:layout_width="162dp"
+        android:layout_height="34dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blackrectangle"
+        android:background="@drawable/musicbg"
+        app:layout_constraintVertical_bias="0.121" />
+
+    <Switch
+        android:id="@+id/musicswitch"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="52dp"
+        android:scaleX="2.0"
+        android:scaleY="2.0"
+        android:thumbTint="@color/green"
+        android:trackTint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintStart_toEndOf="@+id/music"
+        app:layout_constraintTop_toBottomOf="@+id/blackrectangle"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <ImageView
+        android:id="@+id/Country"
+        android:layout_width="162dp"
+        android:layout_height="34dp"
+        android:background="@drawable/country"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blackrectangle"
+        app:layout_constraintVertical_bias="0.297" />
+
+    <ImageView
+        android:id="@+id/helpsupport"
+        android:layout_width="162dp"
+        android:layout_height="50dp"
+        android:background="@drawable/helpandsupport"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.064"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blackrectangle"
+        app:layout_constraintVertical_bias="0.466" />
+
+
+    <TextView
+        android:layout_width="134dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="32dp"
+        android:background="@drawable/roundedblack"
+        android:gravity="center"
+        android:text="INDIA"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/Country"
+        app:layout_constraintTop_toBottomOf="@+id/musicswitch"
+        app:layout_constraintVertical_bias="0.08" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginTop="203dp"
+        android:background="@drawable/aiandmadeby"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/helpsupport"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

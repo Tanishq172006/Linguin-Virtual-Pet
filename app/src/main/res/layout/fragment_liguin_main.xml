@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    app:ignore="NamespaceTypo">
+
+    <TextView
+        android:id="@+id/petReaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="I LOVE LINUX OMG>>>>>>>>>>>>"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:singleLine="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scrollHorizontally="true"
+        android:visibility="gone" />
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/petAnimationView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:lottie_fileName="pet_animationreal.json"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true" />
+
+    <TextView
+        android:id="@+id/happinessText"
+        android:layout_marginTop="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Happiness: 0" />
+
+    <TextView
+        android:id="@+id/hungerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hunger: 0" />
+
+    <TextView
+        android:id="@+id/sadnessText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sadness: 0" />
+
+
+
+</LinearLayout>
