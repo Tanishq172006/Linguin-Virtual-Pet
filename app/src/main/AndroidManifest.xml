@@ -30,12 +30,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.example.linguin.TestMainActivity"
-            android:exported="true">
-
-        </activity>
-
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

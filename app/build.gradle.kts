@@ -8,12 +8,6 @@ plugins {
     alias(libs.plugins.safeargs)
 }
 
-val localProperties = Properties()
-val localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localProperties.load(FileInputStream(localPropertiesFile))
-}
-val openAiKey = localProperties.getProperty("Open_Ai_key") ?: ""
 
 android {
     namespace = "com.example.myapplication"
@@ -27,7 +21,6 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "Open_Ai_key", "\"$openAiKey\"")
 
         vectorDrawables {
             useSupportLibrary = true
