@@ -32,6 +32,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
 
     buildTypes {
@@ -69,6 +70,8 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
 
 dependencies {
@@ -88,6 +91,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.firebase.ai)
     kapt(libs.glide.compiler)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
@@ -110,4 +114,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.work.runtime.ktx)
+   implementation(libs.rive)
+    implementation(libs.androidx.startup.runtime)
 }

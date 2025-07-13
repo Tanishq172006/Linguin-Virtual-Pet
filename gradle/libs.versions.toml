@@ -29,12 +29,18 @@ navigationFragmentKtx = "2.9.1"
 navigationUiKtx = "2.9.1"
 navigation = "2.7.7"
 composeCompiler = "1.5.3"
+rive = "10.0.4"
+firebaseAi = "16.2.0"
+startup = "1.1.1"
+
 
 
 
 
 
 [libraries]
+rive = { group = "app.rive", name = "rive-android", version.ref = "rive" }
+androidx-startup-runtime = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -78,6 +84,7 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
 compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "composeCompiler" }
+firebase-ai = { group = "com.google.firebase", name = "firebase-ai", version.ref = "firebaseAi" }
 
 
 

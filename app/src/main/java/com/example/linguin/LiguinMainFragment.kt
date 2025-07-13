@@ -6,6 +6,7 @@ import android.speech.RecognizerIntent
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -15,6 +16,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import app.rive.runtime.kotlin.RiveAnimationView
+import app.rive.runtime.kotlin.controllers.RiveFileController
+import app.rive.runtime.kotlin.core.RiveEvent
 import com.airbnb.lottie.LottieAnimationView
 import com.example.myapplication.AIpetApp.PetModelFactory
 import com.example.myapplication.AIpetApp.PetRepository
@@ -33,6 +37,8 @@ class LiguinMainFragment : Fragment() {
     private lateinit var textToSpeech: TextToSpeech
     private var recognizer: SpeechRecognizer? = null
     private lateinit var petAnimationView: LottieAnimationView
+    private lateinit var riveAnimationView: RiveAnimationView
+    private lateinit var controller: RiveFileController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,12 +46,24 @@ class LiguinMainFragment : Fragment() {
     ): View = inflater.inflate(R.layout.fragment_liguin_main, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        petAnimationView = view.findViewById(R.id.petAnimationView)
+//        petAnimationView = view.findViewById(R.id.petAnimationView)
+        riveAnimationView = view.findViewById(R.id.riveanim)
         val speechButton = view.findViewById<Button>(R.id.talkToLinguinBtn)
         val reactionText = view.findViewById<TextView>(R.id.petReaction)
         val happinessText = view.findViewById<TextView>(R.id.happinessText)
         val hungerText = view.findViewById<TextView>(R.id.hungerText)
         val sadnessText = view.findViewById<TextView>(R.id.sadnessText)
+
+        controller = riveAnimationView.controller
+
+
+        controller.addEventListener( object : RiveFileController.RiveEventListener{
+            override fun notifyEvent(event: RiveEvent) {
+                Log.d("EventState" , "${event.name}")
+            }
+        }
+        )
+
 
         textToSpeech = TextToSpeech(requireContext()) { status ->
             if (status == TextToSpeech.SUCCESS) {
@@ -56,7 +74,8 @@ class LiguinMainFragment : Fragment() {
                 maleVoice?.let { textToSpeech.voice = it }
             }
         }
-        playPetAnimation()
+//        controller.play("idle")
+
 
         viewModel.pet.observe(viewLifecycleOwner) { pet ->
             happinessText.text = "  : ${pet.happiness}"
@@ -64,11 +83,11 @@ class LiguinMainFragment : Fragment() {
             sadnessText.text = "  : ${pet.sad}"
         }
 
-        petAnimationView.setOnClickListener {
+        riveAnimationView.setOnClickListener {
             speak("GNU/Linux is love. Tap me twice for a kernel of wisdom.")
         }
 
-        petAnimationView.setOnTouchListener(object : View.OnTouchListener {
+        riveAnimationView.setOnTouchListener(object : View.OnTouchListener {
             private var lastTapTime = 0L
             override fun onTouch(v: View?, event: MotionEvent?): Boolean {
                 if (event?.action == MotionEvent.ACTION_UP) {
@@ -89,6 +108,8 @@ class LiguinMainFragment : Fragment() {
         if (args.ToyOrFoodData.isNotBlank()) {
             view.postDelayed({ handleShoppingItem(args.ToyOrFoodData) }, 300)
         }
+
+        controller.play("idle")
     }
 
     private fun speak(text: String) {
@@ -98,12 +119,69 @@ class LiguinMainFragment : Fragment() {
             this.visibility = View.VISIBLE
             this.isSelected = true
         }
-        playPetAnimation()
+
+        if (text == "hello") {
+            loopAnimationhi(5000)
+        } else {
+            loopTalkingAnimation(3000)
+        }
+    }
+
+    private fun loopTalkingAnimation(durationMillis: Long = 3000L) {
+        val startTime = System.currentTimeMillis()
+
+        fun loop() {
+            controller.play("talking")
+            riveAnimationView.postDelayed({
+                if (System.currentTimeMillis() - startTime < durationMillis) {
+                    loop()
+                } else {
+                    controller.play("hi back")
+                }
+            }, 1000)
+        }
+
+        loop()
+    }
+
+    private fun loopAnimationhi(durationMillis: Long = 5000L){
+        val startTime = System.currentTimeMillis()
+        fun loop() {
+            controller.play("hi")
+            controller.play("hi back")
+            riveAnimationView.postDelayed({
+                if (System.currentTimeMillis() - startTime < durationMillis) {
+                    loop()
+                } else {
+                    controller.play("idle")
+                }
+            }, 1000)
+        }
+
+        loop()
+
+    }
+
+
+    private fun loopAnimationidle(durationMillis: Long = 5000L){
+        val startTime = System.currentTimeMillis()
+        fun loop() {
+            controller.play("hi looping")
+            riveAnimationView.postDelayed({
+                if (System.currentTimeMillis() - startTime < durationMillis) {
+                    loop()
+                } else {
+                    controller.play("idle")
+                }
+            }, 1000)
+        }
+
+        loop()
+
     }
 
     private fun playPetAnimation() {
-        petAnimationView.setAnimation("pet_animationreal.json")
-        petAnimationView.playAnimation()
+        controller.play("hi back")
     }
 
     private fun handleShoppingItem(item: String) {
@@ -117,6 +195,7 @@ class LiguinMainFragment : Fragment() {
                 viewModel.feedPet(50)
                 viewModel.setHappinessRelative(15)
                 speak("Nothing beats some fresh shellfish! Yum!")
+                controller.play("idle")
             }
             "SudoSandwich" -> {
                 viewModel.feedPet(75)
@@ -139,6 +218,7 @@ class LiguinMainFragment : Fragment() {
             "Windows Toy" -> {
                 viewModel.setSadness(100)
                 speak("You dare bring that near me?! Error 0xPenguin")
+                controller.play("hi back")
             }
             "Tux Penguin" -> {
                 viewModel.setHappiness(50)
