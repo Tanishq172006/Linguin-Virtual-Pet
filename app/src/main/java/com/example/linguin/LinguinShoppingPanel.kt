@@ -10,25 +10,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 
-
 class LinguinShoppingPanel : Fragment() {
 
-
-
-
     override fun onCreateView(
-        inflater: LayoutInflater , container: ViewGroup? ,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val view=  inflater.inflate(R.layout.fragment_linguin_shopping_panel , container , false)
-        return view
+        return inflater.inflate(R.layout.fragment_linguin_shopping_panel, container, false)
     }
 
-    override fun onViewCreated(view: View , savedInstanceState: Bundle?) {
-        super.onViewCreated(view , savedInstanceState)
-        val datalist = ArrayList<LinguinShopData>()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        val datalist = ArrayList<LinguinShopData>()
 
         val icon1 = LinguinShopData(R.drawable.macreal, "Mac Toy")
         val icon2 = LinguinShopData(R.drawable.linuxtoyreal, "Tux Penguin")
@@ -38,7 +32,6 @@ class LinguinShoppingPanel : Fragment() {
         val icon6 = LinguinShopData(R.drawable.shellfishimg, "Shell Fish")
         val icon7 = LinguinShopData(R.drawable.applepie, "Apt Pie")
         val icon8 = LinguinShopData(R.drawable.windowsreal, "Windows Toy")
-
 
         datalist.add(icon1)
         datalist.add(icon2)
@@ -50,27 +43,13 @@ class LinguinShoppingPanel : Fragment() {
         datalist.add(icon8)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.LinguinRecycler)
-        val linguinAdapter = LinguinShoppingRecyclerAdapter(datalist){ selectedItem->
-            val action = LinguinShoppingPanelDirections.actionLinguinShoppingPanelToLiguinMainFragment(selectedItem.Itemtxt)
+        val linguinAdapter = LinguinShoppingRecyclerAdapter(datalist) { selectedItem ->
+            val action = LinguinShoppingPanelDirections
+                .actionLinguinShoppingPanelToLiguinMainFragment(selectedItem.Itemtxt)
             findNavController().navigate(action)
-
         }
-
-
-
 
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.adapter = linguinAdapter
-
-
-
-
-
     }
-
-
-
-
-
-
 }

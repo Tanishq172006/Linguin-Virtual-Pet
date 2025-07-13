@@ -6,7 +6,7 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/black"
     app:ignore="NamespaceTypo">
 
     <TextView
@@ -16,7 +16,7 @@
         android:layout_marginBottom="16dp"
         android:text="I LOVE LINUX OMG>>>>>>>>>>>>"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:textColor="#00FF00"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
@@ -28,31 +28,92 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/petAnimationView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         app:lottie_fileName="pet_animationreal.json"
         app:lottie_loop="true"
         app:lottie_autoPlay="true" />
 
-    <TextView
-        android:id="@+id/happinessText"
-        android:layout_marginTop="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Happiness: 0" />
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/hungerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hunger: 0" />
+        <ImageView
+            android:layout_width="169dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="60dp"
+            android:background="@drawable/happylinguin"
+            />
 
-    <TextView
-        android:id="@+id/sadnessText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sadness: 0" />
+        <TextView
+            android:id="@+id/happinessText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text=" : 0"
+            android:textSize="32sp" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="169dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="60dp"
+            android:background="@drawable/hungerlinguin"
+            />
+
+        <TextView
+            android:id="@+id/hungerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text=" : 0"
+            android:textSize="32sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="169dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="60dp"
+            android:background="@drawable/sadnesslinguin"
+            />
+
+        <TextView
+            android:id="@+id/sadnessText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:text=" : 0"
+            android:textSize="32sp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/talkToLinguinBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="47dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="Talk to Linguin"
+        android:backgroundTint="@null"
+        android:textColor="@color/red"
+        android:background="@drawable/linguinbutton"
+        app:backgroundTint="@null" />
 
 
 </LinearLayout>

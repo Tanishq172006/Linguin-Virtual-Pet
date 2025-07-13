@@ -1,10 +1,11 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
     <style name="Base.Theme.Linguin2" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">#EFECEC</item>
         <item name="colorPrimaryDark">#000000</item>
         <item name="colorAccent">#03DAC5</item>
         <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="buttonStyle">@null</item>
+
     </style>
 
     <style name="MyActionBar" parent="Widget.AppCompat.ActionBar">

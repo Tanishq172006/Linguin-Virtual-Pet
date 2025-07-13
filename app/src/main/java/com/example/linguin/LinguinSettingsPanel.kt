@@ -1,11 +1,14 @@
 package com.example.myapplication.Linguin
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Switch
 import androidx.fragment.app.Fragment
 import com.example.myapplication.R
@@ -38,6 +41,15 @@ class LinguinSettingsPanel : Fragment() {
             } else {
                 activity?.stopMusic()
             }
+        }
+
+        val helpSupport = view.findViewById<ImageView>(R.id.helpsupport)
+
+        helpSupport.setOnClickListener {
+            val url = "https://github.com/Tanishq172006/Linguin-Virtual-Pet"
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+            startActivity(intent)
         }
     }
 

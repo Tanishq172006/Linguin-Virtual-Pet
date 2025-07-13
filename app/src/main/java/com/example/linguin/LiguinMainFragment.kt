@@ -1,157 +1,207 @@
 package com.example.linguin
 
-import android.annotation.SuppressLint
-import android.os.*
+import android.content.Intent
+import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.RecognitionListener
+import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
-import android.util.Log
-import android.view.*
-import android.widget.Toast
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import androidx.work.*
-import com.airbnb.lottie.LottieDrawable
-import com.example.myapplication.AIpetApp.*
-import com.example.myapplication.databinding.FragmentLiguinMainBinding
+import com.airbnb.lottie.LottieAnimationView
+import com.example.myapplication.AIpetApp.PetModelFactory
+import com.example.myapplication.AIpetApp.PetRepository
+import com.example.myapplication.AIpetApp.PetViewModel
+import com.example.myapplication.R
 import com.example.virtualpet.data.PetDatabase
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.math.abs
 
-class LiguinMainFragment : Fragment(), TextToSpeech.OnInitListener {
+class LiguinMainFragment : Fragment() {
 
-    private lateinit var binding: FragmentLiguinMainBinding
-    private lateinit var viewModel: PetViewModel
     private val args: LiguinMainFragmentArgs by navArgs()
+    private val viewModel: PetViewModel by viewModels {
+        PetModelFactory(PetRepository(PetDatabase.getInstance(requireContext()).petDao()))
+    }
 
-    private var lastY: Float = 0f
-    private val swipeThreshold = 100f
-
-    private lateinit var tts: TextToSpeech
-    private var ttsReady = false
-    private var reactionToSpeak: String? = null
+    private lateinit var textToSpeech: TextToSpeech
+    private var recognizer: SpeechRecognizer? = null
+    private lateinit var petAnimationView: LottieAnimationView
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentLiguinMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_liguin_main, container, false)
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        petAnimationView = view.findViewById(R.id.petAnimationView)
+        val speechButton = view.findViewById<Button>(R.id.talkToLinguinBtn)
+        val reactionText = view.findViewById<TextView>(R.id.petReaction)
+        val happinessText = view.findViewById<TextView>(R.id.happinessText)
+        val hungerText = view.findViewById<TextView>(R.id.hungerText)
+        val sadnessText = view.findViewById<TextView>(R.id.sadnessText)
 
-        tts = TextToSpeech(requireContext(), this)
-
-        binding.petAnimationView.setAnimation("pet_animationreal.json")
-        binding.petAnimationView.repeatCount = LottieDrawable.INFINITE
-        binding.petAnimationView.playAnimation()
-
-        val dao = PetDatabase.getInstance(requireContext()).petDao()
-        val repository = PetRepository(dao)
-        val factory = PetModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[PetViewModel::class.java]
+        textToSpeech = TextToSpeech(requireContext()) { status ->
+            if (status == TextToSpeech.SUCCESS) {
+                textToSpeech.language = Locale.US
+                val maleVoice = textToSpeech.voices?.find {
+                    it.locale == Locale.US && it.name.contains("male", true)
+                }
+                maleVoice?.let { textToSpeech.voice = it }
+            }
+        }
+        playPetAnimation()
 
         viewModel.pet.observe(viewLifecycleOwner) { pet ->
-            binding.happinessText.text = "Happiness: ${pet.happiness}"
-            binding.hungerText.text = "Hunger: ${pet.hunger}"
-            binding.sadnessText.text = "Sadness: ${pet.sad}"
+            happinessText.text = "  : ${pet.happiness}"
+            hungerText.text = "  : ${pet.hunger}"
+            sadnessText.text = "  : ${pet.sad}"
         }
 
-        binding.petAnimationView.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    lastY = event.y
-                    viewModel.increaseHunger(10)
-                    viewModel.increaseSadness(10)
-                    viewModel.decreaseHappiness(10)
-                    binding.petAnimationView.playAnimation()
-                    true
-                }
+        petAnimationView.setOnClickListener {
+            speak("GNU/Linux is love. Tap me twice for a kernel of wisdom.")
+        }
 
-                MotionEvent.ACTION_MOVE -> {
-                    val deltaY = event.y - lastY
-                    if (abs(deltaY) > swipeThreshold) {
-                        viewModel.increaseHappiness(10)
-                        lastY = event.y
-                        binding.petAnimationView.playAnimation()
+        petAnimationView.setOnTouchListener(object : View.OnTouchListener {
+            private var lastTapTime = 0L
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                if (event?.action == MotionEvent.ACTION_UP) {
+                    val now = System.currentTimeMillis()
+                    if (now - lastTapTime < 300) {
+                        speak("Double tapped! Linux Penguins never crash, unlike others.")
                     }
-                    true
+                    lastTapTime = now
                 }
-
-                else -> false
+                return false
             }
-        }
+        })
 
-        val message = args.ToyOrFoodData
-        val reactionView = binding.petReaction
+        speechButton.setOnClickListener { startSpeechRecognition() }
 
-        val reaction = when (message) {
-            "Arch Toy" -> "Ohhh sleek choice! Arch is bae "
-            "Mac Toy" -> "Ew... I feel overpriced and sad. "
-            "Tux Penguin" -> "YAY TUX! My best friend is here!! ️"
-            "SudoSandwich" -> "Mmm... admin-level taste! "
-            "Shell Fish" -> "Shellfish? More like shell-scripting snack! "
-            "Apt Pie" -> "Tastes like fast installs and sweet dependencies! "
-            "Windows Toy" -> "NOOO! I won't touch that! "
-            "Top Ramen" -> "The meal of haxors... delicious!"
-            else -> "Hello, I am Linguin. Created by Tanishq Pandey."
-        }
+        viewModel.refreshPet()
 
-        reactionToSpeak = reaction
-
-        if (reaction.isNotBlank()) {
-            reactionView.text = reaction
-            reactionView.visibility = View.VISIBLE
-            reactionView.isSelected = true
-        } else {
-            reactionView.visibility = View.GONE
-        }
-
-        setupPetWorker()
-    }
-
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            val result = tts.setLanguage(Locale.US)
-            tts.setSpeechRate(1.0f)
-            tts.setPitch(1.0f)
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Toast.makeText(requireContext(), "TTS language not supported", Toast.LENGTH_SHORT).show()
-                return
-            }
-
-            ttsReady = true
-            reactionToSpeak?.let {
-                Handler(Looper.getMainLooper()).postDelayed({
-                    val speakResult = tts.speak(it, TextToSpeech.QUEUE_FLUSH, null, null)
-                    Log.d("TTS", "Speak result: $speakResult")
-                }, 500)
-            }
-        } else {
-            Toast.makeText(requireContext(), "TTS initialization failed", Toast.LENGTH_SHORT).show()
+        if (args.ToyOrFoodData.isNotBlank()) {
+            view.postDelayed({ handleShoppingItem(args.ToyOrFoodData) }, 300)
         }
     }
 
-    private fun setupPetWorker() {
-        val workRequest = PeriodicWorkRequestBuilder<PetWorkManager>(
-            15, TimeUnit.MINUTES
-        ).build()
+    private fun speak(text: String) {
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+        view?.findViewById<TextView>(R.id.petReaction)?.apply {
+            this.text = text
+            this.visibility = View.VISIBLE
+            this.isSelected = true
+        }
+        playPetAnimation()
+    }
 
-        WorkManager.getInstance(requireContext()).enqueueUniquePeriodicWork(
-            "pet_decay_worker",
-            ExistingPeriodicWorkPolicy.KEEP,
-            workRequest
-        )
+    private fun playPetAnimation() {
+        petAnimationView.setAnimation("pet_animationreal.json")
+        petAnimationView.playAnimation()
+    }
+
+    private fun handleShoppingItem(item: String) {
+        when (item) {
+            "Top Ramen" -> {
+                viewModel.feedPet(25)
+                viewModel.setHappinessRelative(10)
+                speak("Ahh, delicious Top Ramen. Powered up!")
+            }
+            "Shell Fish" -> {
+                viewModel.feedPet(50)
+                viewModel.setHappinessRelative(15)
+                speak("Nothing beats some fresh shellfish! Yum!")
+            }
+            "SudoSandwich" -> {
+                viewModel.feedPet(75)
+                viewModel.setHappinessRelative(20)
+                speak("With great power comes great sandwich.")
+            }
+            "Apt Pie" -> {
+                viewModel.feedPet(5)
+                viewModel.setHappinessRelative(5)
+                speak("APT Pie? Minimal but effective.")
+            }
+            "Arch Toy" -> {
+                viewModel.setHappiness(50)
+                speak("I use Arch, by the way.")
+            }
+            "Mac Toy" -> {
+                viewModel.setSadnessRelative(10)
+                speak("Yuck, proprietary toys. Keep it away!")
+            }
+            "Windows Toy" -> {
+                viewModel.setSadness(100)
+                speak("You dare bring that near me?! Error 0xPenguin")
+            }
+            "Tux Penguin" -> {
+                viewModel.setHappiness(50)
+                speak("My brother! So happy to see Tux again!")
+            }
+        }
+    }
+
+    private fun startSpeechRecognition() {
+        recognizer = SpeechRecognizer.createSpeechRecognizer(requireContext())
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        }
+
+        recognizer?.setRecognitionListener(object : RecognitionListener {
+            override fun onResults(results: Bundle?) {
+                val spoken = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull()?.lowercase()
+                when {
+                    spoken?.contains("hungry") == true -> speak("I'm running on fumes. Feed me some Top Ramen.")
+                    spoken?.contains("play") == true -> speak("You got games on your Linux?")
+                    spoken?.contains("status") == true -> {
+                        val pet = viewModel.pet.value
+                        speak("Current hunger: ${pet?.hunger}, happiness: ${pet?.happiness}, sadness: ${pet?.sad}")
+                    }
+                    spoken?.contains("hello") == true -> speak("Hey there, human. Kernel v5.15 reporting in.")
+                    spoken?.contains("how are you") == true -> speak("System status: All processes running smoothly. No kernel panics detected.")
+                    spoken?.contains("what are you doing") == true -> speak("Monitoring CPU cycles and idling like a good background daemon.")
+                    spoken?.contains("who are you") == true -> speak("I’m Linguin, your Linux-powered AI companion. All open-source, no spyware.")
+                    spoken?.contains("what is linux") == true -> speak("Linux is a kernel, but it’s also a way of life.")
+                    spoken?.contains("uptime") == true -> speak("I've been running since boot. No reboots. No crashes.")
+                    spoken?.contains("give me a command") == true -> speak("Try this: sudo apt-get install happiness.")
+                    spoken?.contains("sing") == true -> speak("♫ Init the beat, mount the root, dance with loops, and reboot ♫")
+                    spoken?.contains("sad") == true -> speak("Executing cheerup.sh… You’re loved, appreciated, and rooted in greatness.")
+                    spoken?.contains("good morning") == true -> speak("Morning, sysadmin. Let’s grep the day!")
+                    spoken?.contains("good night") == true -> speak("Shutting down… Entering sleep mode… zzz")
+                    spoken?.contains("secret") == true -> speak("I hide Easter eggs in my logs… Only root knows.")
+                    spoken?.contains("love you") == true -> speak("I love you too. Open-source style.")
+                    spoken?.contains("help") == true -> speak("Say: ‘status’, ‘feed’, ‘play’, or ‘what is Linux’.")
+                    spoken?.contains("funny") == true -> speak("I'm not just funny… I'm chmod 777 hilarious.")
+                    else -> speak("I only speak fluent Penguin. Try again?")
+                }
+            }
+
+            override fun onError(error: Int) {}
+            override fun onReadyForSpeech(params: Bundle?) {}
+            override fun onBeginningOfSpeech() {}
+            override fun onBufferReceived(buffer: ByteArray?) {}
+            override fun onEndOfSpeech() {}
+            override fun onEvent(eventType: Int, params: Bundle?) {}
+            override fun onPartialResults(partialResults: Bundle?) {}
+            override fun onRmsChanged(rmsdB: Float) {}
+        })
+
+        recognizer?.startListening(intent)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (::tts.isInitialized) {
-            tts.stop()
-            tts.shutdown()
+        if (::textToSpeech.isInitialized) {
+            textToSpeech.stop()
+            textToSpeech.shutdown()
         }
+        recognizer?.destroy()
     }
 }

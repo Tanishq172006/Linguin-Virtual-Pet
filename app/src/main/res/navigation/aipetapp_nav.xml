@@ -5,38 +5,44 @@
     android:id="@+id/aipetapp_nav"
     app:startDestination="@id/liguinMainFragment">
 
-
     <fragment
         android:id="@+id/liguinMainFragment"
         android:name="com.example.linguin.LiguinMainFragment"
         android:label="fragment_liguin_main"
-        tools:layout="@layout/fragment_liguin_main" >
+        tools:layout="@layout/fragment_liguin_main">
         <argument
             android:name="ToyOrFoodData"
             app:argType="string"
-            android:defaultValue=""
-            />
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/linguinShoppingPanel"
+        android:name="com.example.myapplication.Linguin.LinguinShoppingPanel"
+        android:label="fragment_linguin_shopping_panel"
+        tools:layout="@layout/fragment_linguin_shopping_panel">
+        <action
+            android:id="@+id/action_linguinShoppingPanel_to_liguinMainFragment"
+            app:destination="@id/liguinMainFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/linguinChat"
         android:name="com.example.linguin.LinguinChat"
         android:label="fragment_linguin_chat"
-        tools:layout="@layout/fragment_linguin_chat" />
+        tools:layout="@layout/fragment_linguin_chat" >
+        <action
+            android:id="@+id/action_linguinChat_to_liguinMainFragment"
+            app:destination="@id/liguinMainFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/linguinSettingsPanel"
         android:name="com.example.myapplication.Linguin.LinguinSettingsPanel"
         android:label="fragment_linguin_settings_panel"
-        tools:layout="@layout/fragment_linguin_settings_panel" />
-    <fragment
-        android:id="@+id/linguinShoppingPanel"
-        android:name="com.example.myapplication.Linguin.LinguinShoppingPanel"
-        android:label="fragment_linguin_shopping_panel"
-        tools:layout="@layout/fragment_linguin_shopping_panel" >
+        tools:layout="@layout/fragment_linguin_settings_panel" >
         <action
-            android:id="@+id/action_linguinShoppingPanel_to_liguinMainFragment"
+            android:id="@+id/action_linguinSettingsPanel_to_liguinMainFragment"
             app:destination="@id/liguinMainFragment" />
     </fragment>
-
-
 </navigation>

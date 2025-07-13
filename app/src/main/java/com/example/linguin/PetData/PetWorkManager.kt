@@ -1,6 +1,5 @@
 package com.example.myapplication.AIpetApp
 
-
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -20,11 +19,11 @@ class PetWorkManager(
 
             val updatedPet = pet.copy(
                 hunger = (pet.hunger + 5).coerceAtMost(100),
-                happiness = (pet.happiness - 5).coerceAtLeast(0)
+                happiness = (pet.happiness - 5).coerceAtLeast(0),
+                sad = (pet.sad + 5).coerceAtMost(100)
             )
 
             dao.insertPet(updatedPet)
-
             Result.success()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -32,4 +31,3 @@ class PetWorkManager(
         }
     }
 }
-

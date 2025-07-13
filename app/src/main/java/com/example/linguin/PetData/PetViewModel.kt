@@ -9,28 +9,12 @@ class PetViewModel(private val repository: PetRepository) : ViewModel() {
     val pet: LiveData<Pet> = _pet
 
     init {
-        loadPet()
+        refreshPet()
     }
 
-    private fun loadPet() {
+    fun refreshPet() {
         viewModelScope.launch {
             _pet.value = repository.getPet()
-        }
-    }
-
-    fun feedPet() {
-        _pet.value?.let {
-            val updated = it.copy(hunger = (it.hunger - 10).coerceAtLeast(0))
-            _pet.value = updated
-            savePet(updated)
-        }
-    }
-
-    fun playWithPet() {
-        _pet.value?.let {
-            val updated = it.copy(happiness = (it.happiness + 10).coerceAtMost(100))
-            _pet.value = updated
-            savePet(updated)
         }
     }
 
@@ -40,35 +24,44 @@ class PetViewModel(private val repository: PetRepository) : ViewModel() {
         }
     }
 
-    fun increaseHunger(amount: Int) {
+    fun feedPet(amount: Int) {
         _pet.value?.let {
-            it.hunger += amount
-            _pet.value = it
-            savePet(it)
+            val newHunger = (it.hunger - amount).coerceAtLeast(0)
+            val updated = it.copy(hunger = newHunger, sad = (100 - it.happiness).coerceIn(0, 100))
+            _pet.value = updated
+            savePet(updated)
         }
     }
 
-    fun increaseSadness(amount: Int) {
+    fun setHappiness(value: Int) {
         _pet.value?.let {
-            it.sad += amount
-            _pet.value = it
-            savePet(it)
+            val happiness = value.coerceIn(0, 100)
+            val sadness = (100 - happiness).coerceIn(0, 100)
+            val updated = it.copy(happiness = happiness, sad = sadness)
+            _pet.value = updated
+            savePet(updated)
         }
     }
 
-    fun decreaseHappiness(amount: Int) {
+    fun setHappinessRelative(delta: Int) {
         _pet.value?.let {
-            it.happiness = (it.happiness - amount).coerceAtLeast(0)
-            _pet.value = it
-            savePet(it)
+            setHappiness((it.happiness + delta).coerceIn(0, 100))
         }
     }
 
-    fun increaseHappiness(amount: Int) {
+    fun setSadness(value: Int) {
         _pet.value?.let {
-            it.happiness = (it.happiness + amount).coerceAtMost(100)
-            _pet.value = it
-            savePet(it)
+            val sadness = value.coerceIn(0, 100)
+            val happiness = (100 - sadness).coerceIn(0, 100)
+            val updated = it.copy(sad = sadness, happiness = happiness)
+            _pet.value = updated
+            savePet(updated)
+        }
+    }
+
+    fun setSadnessRelative(delta: Int) {
+        _pet.value?.let {
+            setSadness((it.sad + delta).coerceIn(0, 100))
         }
     }
 }
