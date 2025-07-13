@@ -106,7 +106,36 @@ when {
     // ...more commands
     else -> speak("I only speak fluent Penguin. Try again?")
 }
-- 
+-
+
+## 🐧 Offline AI Responses – Powered by JSON Logic
+
+Linguin may look like your average cute penguin, but behind the scenes, he’s got some clever offline AI magic going on — no OpenAI API needed for his witty responses!
+
+### 🧠 How It Works
+
+We use a local `triggers.json` file (preloaded) that contains a list of fun, Linux-themed **trigger phrases** and corresponding **replies**.
+
+When a user types or speaks to Linguin, the app checks if their input **matches any trigger** (case-insensitive and partial matches allowed). If it does, Linguin replies with the associated response — through text, speech, and animation.
+
+### 📁 Sample JSON Structure
+
+```json
+[
+  {
+    "trigger": "linux",
+    "reply": "Linux is love. Linux is life. 🐧💚"
+  },
+  {
+    "trigger": "arch",
+    "reply": "Arch is beautiful... and deadly. But I use it BTW. 🧠🐧"
+  },
+  {
+    "trigger": "do you sleep?",
+    "reply": "Only when the device is idle. Otherwise, I’m multitasking like a Linux kernel. 🧠⚙️"
+  }
+]
+
 
 ---
 
