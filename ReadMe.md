@@ -6,8 +6,10 @@ Linguin is your open-source, animated AI companion that lives on your Android de
 
 ## ✨ Features
 
-- 🐧 **AI-Driven Reactions**  
-  Linguin reacts uniquely to food, toys, and speech prompts using pre-defined reactions or OpenAI-powered responses.
+
+
+- 🐧 **Well-Driven Reactions**  
+  Linguin reacts uniquely to food, toys, and speech prompts using pre-defined reactions or Backend base-responses.
 
 - 🎙️ **Text-to-Speech & Voice Recognition**  
   Talk to Linguin, and he'll respond with witty Linux-based remarks in a human male voice.
