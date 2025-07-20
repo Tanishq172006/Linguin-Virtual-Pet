@@ -78,6 +78,77 @@ Linguin responds to your spoken prompts using Android’s Speech Recognition + T
 
 ---
 
+
+--New Voice Prompts--
+
+hello  
+how are you  
+what are you doing  
+who are you  
+what is linux  
+uptime  
+give me a command  
+sing  
+sad  
+good morning  
+good night  
+secret  
+love you  
+funny  
+help  
+run top  
+sudo  
+compile error  
+segfault  
+man page  
+kernel panic  
+cron job  
+what is bash  
+list files  
+where is my file  
+ip address  
+firewall status  
+ssh  
+ping  
+proxy  
+vpn  
+makefile  
+docker  
+flatpak  
+snap  
+git  
+fork me  
+pull request  
+merge conflict  
+feed me  
+play with me  
+tell me a joke  
+what time is it  
+are you alive  
+where am i  
+scan ports  
+disk usage  
+memory check  
+clean cache  
+hibernate  
+reboot  
+shutdown  
+who am i  
+i am sad  
+linux motto  
+terminal  
+systemd  
+gnome or kde  
+default shell  
+hug me  
+tell me something nice  
+motivate me  
+thank you  
+i need a break  
+debug me  
+status  
+
+
 ## 📦 Tech Stack
 
 - **Kotlin** – Modern Android development
