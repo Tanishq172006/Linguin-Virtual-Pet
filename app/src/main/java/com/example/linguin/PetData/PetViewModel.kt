@@ -8,6 +8,8 @@ class PetViewModel(private val repository: PetRepository) : ViewModel() {
     private val _pet = MutableLiveData<Pet>()
     val pet: LiveData<Pet> = _pet
 
+    var hasHandledShoppingItem: Boolean = false
+
     init {
         refreshPet()
     }
